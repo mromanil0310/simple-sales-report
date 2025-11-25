@@ -1,6 +1,15 @@
 # GitHub Actions cache
 /.github/.cache
 
+# Ignore virtual environments
+dbt311_env/
+.venv/
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
 # Docker cache
 docker/logs/
 docker/plugins/
