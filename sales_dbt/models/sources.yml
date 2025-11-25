@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw
+    database: TECH_TEST
+    schema: RAW_DATA
+    tables:
+      - name: users
+      - name: orders

@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Staging model for users loaded from TECH_TEST.RAW_DATA.USERS."
+    columns:
+      - name: user_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+          - unique
+      - name: name
+        description: "First name of the user from the source system."
+      - name: joined_date
+        description: "Date when the user joined or registered."
+
+  - name: stg_orders
+    description: "Staging model for orders loaded from TECH_TEST.RAW_DATA.ORDERS."
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order."
+      - name: user_id
+        description: "Foreign key referencing stg_users.user_id."
+      - name: amount
+        description: "Monetary amount of the order."
+      - name: order_date
+        description: "Date when the order was placed."
+
+  - name: mart_user_spend
+    description: "Mart model aggregating number of orders and total spend per user."
+    columns:
+      - name: user_id
+        description: "Unique identifier for the user."
+      - name: first_name
+        description: "User's first name."
+      - name: joined_date
+        description: "Date when the user joined or registered."
+      - name: number_of_orders
+        description: "Total number of orders placed by the user across all time."
+      - name: total_spend
+        description: "Total monetary amount spent by the user across all orders."

@@ -1,0 +1,43 @@
+services:
+  airflow:
+    build:
+      context: .
+      dockerfile: dockerfile-airflow.dockerfile
+    container_name: airflow
+    restart: always
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+
+      # --- Snowflake Connection Variables ---
+      SNOWFLAKE_USER: ${SNOWFLAKE_USER}
+      SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
+      SNOWFLAKE_ACCOUNT: ${SNOWFLAKE_ACCOUNT}
+      SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
+      SNOWFLAKE_DB: ${SNOWFLAKE_DB}
+      SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA}
+
+    volumes:
+      # Airflow internals
+      - ./docker/dags:/opt/airflow/dags
+      - ./docker/logs:/opt/airflow/logs
+      - ./docker/plugins:/opt/airflow/plugins
+      - ./sales_dbt:/opt/airflow/sales_dbt
+      - ./sales_dbt/.dbt:/home/airflow/.dbt
+
+      # Local Mac folders (you want to keep absolute paths)
+      - /Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/source:/Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/source
+      - /Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/success:/Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/success
+      - /Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/fail:/Users/marloromanillos/Desktop/Folders/mrom/Snowflake_Project/simple-sales-report/fail
+
+      # Named persistent volume for Airflow metadata
+      - airflow_db:/opt/airflow
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "airflow db init && airflow scheduler & airflow webserver"
+
+volumes:
+  airflow_db:
+    driver: local
