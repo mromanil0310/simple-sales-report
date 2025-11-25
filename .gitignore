@@ -1,6 +1,12 @@
 # GitHub Actions cache
 /.github/.cache
 
+# dbt build artifacts
+sales_dbt/target/
+target/
+dbt_packages/
+logs/
+
 # Ignore virtual environments
 dbt311_env/
 .venv/

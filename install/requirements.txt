@@ -1,5 +1,0 @@
-kafka-python
-snowflake-connector-python
-dbt-core
-dbt-snowflake
-requests
